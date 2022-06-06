@@ -17,8 +17,8 @@ module.exports = {
     const speaker = await dataSources.speakerDataSource.getSpeakerById(id);
     return speaker;
   },
-  users: async (parent, args, context, info) => {
-    const users = await context.dataSources.userDataSource.getUsers();
+  users: async (parent, args, { user, dataSources }, info) => {
+    const users = await dataSources.userDataSource.getUsers();
     return users;
   },
   userById: async (parent, { id }, { dataSources }, info) => {

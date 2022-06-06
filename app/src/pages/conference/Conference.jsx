@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
+import { Sessions, Session, AddSession } from "./Sessions";
 import "./style-sessions.css";
-import { Sessions, AddSession } from "./Sessions"
-import { Speakers, Speaker } from "./Speakers"
+import { Speakers, Speaker } from "./Speakers";
 
 export function Conference() {
   const { path, url } = useRouteMatch();
@@ -10,18 +10,22 @@ export function Conference() {
   return (
     <>
       <Switch>
-        <Route path={`${path}/sessions/new`}>	
-          <AddSession />	
+        <Route path={`${path}/sessions/new`}>
+          <AddSession />
         </Route>
-        <Route path={`${path}/sessions`}>
-          <Sessions />
+        <Route path={`${path}/sessions/:session_id`}>
+          <Session />
+        </Route>
+        <Route path={`${path}/speakers/:speaker_id`}>
+          <Speaker />
         </Route>
         <Route path={`${path}/speakers`}>
           <Speakers />
         </Route>
-        <Route path={`${path}/speaker/:speaker_id`}>
-          <Speaker />
+        <Route path={`${path}/sessions`}>
+          <Sessions />
         </Route>
+
         <Route path={`${path}`}>
           <section className="banner">
             <img src="images/banner3.png" alt="" />

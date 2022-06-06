@@ -1,7 +1,11 @@
 const authUtils = require("../utils/auth");
 
 module.exports = {
-  createSession: async (parent, args, { dataSources }, info) => {
+  createSession: async (parent, args, { dataSources, user }, info) => {
+    if (!user) {
+      return null;
+    }
+
     const session = await dataSources.sessionDataSource.createSession(
       args.session
     );
@@ -21,10 +25,21 @@ module.exports = {
 
     const hash = authUtils.hashPassword(userCredentials.password);
 
+    const role = userCredentials.email
+      .toLowerCase()
+      .endsWith("@globomantics.com")
+      ? "ADMIN"
+      : "USER";
+
     const dbUser = dataSources.userDataSource.createUser({
       email: userCredentials.email,
       hash,
+      role,
     });
+
+    if (role === "USER") {
+      dataSources.speakerDataSource.createSpeaker(dbUser);
+    }
 
     const token = authUtils.createToken(dbUser);
 
@@ -70,13 +85,14 @@ module.exports = {
       user: {
         id: existingUser.id,
         email: existingUser.email,
+        role: existingUser.role,
       },
     };
   },
   userInfo: async (parent, args, { dataSources, user }, info) => {
     if (user) {
       return {
-        user: { id: user.sub, email: user.email },
+        user: { id: user.sub, email: user.email, role: user.role },
       };
     }
 
@@ -100,10 +116,14 @@ module.exports = {
     }
     return undefined;
   },
-  markFeatured: async (parent, args, { dataSources }, info) => {
-    return dataSources.speakerDataSource.markFeatured(
-      args.speakerId,
-      args.featured
-    );
+  markFeatured: (parent, args, { user, dataSources }, info) => {
+    if (user && user.role === "ADMIN") {
+      return dataSources.speakerDataSource.markFeatured(
+        args.speakerId,
+        args.featured
+      );
+    }
+
+    return null;
   },
 };

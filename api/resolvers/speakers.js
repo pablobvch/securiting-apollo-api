@@ -10,6 +10,7 @@ module.exports = {
 
     return returns;
   },
+  user(speaker, args, { dataSources }) {
+    return dataSources.userDataSource.getUserById(speaker.userId);
+  },
 };
-
-

@@ -9,4 +9,7 @@ module.exports = {
 
     return favoriteSessions;
   },
+  speaker(user, args, { dataSources }) {
+    return dataSources.speakerDataSource.getSpeakerByUserId(user.id);
+  },
 };

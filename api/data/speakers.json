@@ -9,8 +9,7 @@
           "name": "Batching Vs Streaming"
         }
       ],
-      "name": "Macey Duncan",
-      "featured": true
+      "name": "Macey Duncan"
     },
     {
       "id": "c5e306ae-3f40-4ff0-92a2-503e2f1dc6a1",
@@ -21,8 +20,7 @@
           "name": "Azure you want to use AWS IoT?"
         }
       ],
-      "name": "Jerome Parker",
-      "featured": true
+      "name": "Jerome Parker"
     },
     {
       "id": "aa24b5ca-5b96-4657-909e-e5be82ebf891",
@@ -1943,6 +1941,11 @@
         }
       ],
       "name": "Leslie Bates"
+    },
+    {
+      "userId": "cd7e1ca0-4379-4152-b451-7189c1efc87c",
+      "id": "c10c0a5c-97f7-4ebc-a9e5-4ec223e5f7f2",
+      "featured": true
     }
   ]
 }

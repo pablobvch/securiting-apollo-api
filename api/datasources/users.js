@@ -8,6 +8,12 @@ const adapter = new FileSync("./data/users.json");
 const db = low(adapter);
 db._.mixin(lodashId);
 
+const userDb = db.get("users");
+
+function getUserById(id) {
+  return userDb.getById(id).value();
+}
+
 class UserDataSource extends DataSource {
   constructor() {
     super();
@@ -15,14 +21,15 @@ class UserDataSource extends DataSource {
 
   initialize(config) {
     this.db = db.get("users");
+    this.model = config.context.models.User;
   }
 
-  getUsers(args) {
+  getUsers() {
     return this.db.value();
   }
 
   getUserById(id) {
-    return this.db.getById(id).value();
+    return this.model.getById(id);
   }
 
   createUser(user) {
@@ -49,4 +56,4 @@ class UserDataSource extends DataSource {
   }
 }
 
-module.exports = UserDataSource;
+module.exports = { UserDataSource, getUserById };

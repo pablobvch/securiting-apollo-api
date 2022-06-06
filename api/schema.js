@@ -1,12 +1,19 @@
 const { gql } = require("apollo-server");
 
 module.exports = gql`
+  directive @requiresAdmin on FIELD_DEFINITION
+  directive @cost(value: Int) on FIELD_DEFINITION
+
+  enum Role {
+    ADMIN
+    USER
+  }
+
   input SessionInput {
     title: String!
     description: String
     format: String
     level: String
-    day: String
   }
 
   type Speaker {
@@ -15,12 +22,13 @@ module.exports = gql`
     name: String
     featured: Boolean
     sessions: [Session]
+    user: User
   }
 
   type Session {
     id: ID!
     title: String!
-    description: String
+    description: String @cost(value: 580)
     startsAt: String
     endsAt: String
     room: String
@@ -34,7 +42,7 @@ module.exports = gql`
     speakers: [Speaker]
   }
 
-  type Query {
+  type Query @rateLimit(limit: 5, duration: 10) {
     sessions(
       id: ID
       title: String
@@ -51,7 +59,7 @@ module.exports = gql`
     sessionById(id: ID): Session
     speakers: [Speaker]
     speakerById(id: ID): Speaker
-    users: [User]
+    users: [User] @requiresAdmin
     userById(id: ID): User
     me: User
   }
@@ -60,6 +68,8 @@ module.exports = gql`
     id: String!
     email: String!
     favorites: [Session!]
+    role: Role
+    speaker: Speaker
   }
 
   input Credentials {
